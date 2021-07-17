@@ -1,0 +1,35 @@
+menu "Wifi/TCP Settings"
+
+    config WIFI_SSID
+        string "WiFi SSID"
+        default "myssid"
+        help
+            SSID (network name) 
+
+    config WIFI_PASSWORD
+        string "WiFi Password"
+        default "mypassword"
+        help
+            WiFi password (WPA or WPA2) for the example to use.
+            Can be left blank if the network has no security set.config
+         
+    config MAXIMUM_RETRYS
+        int "Wifi retry"
+        default 10
+        help
+            Amount of times the ESP32 tries to connect to wifi.
+
+    config IPV4_ADDR
+        string "IPV4 Address"
+        default "192.168.0.165"
+        help
+            IPV4 address of the TCP server. 
+
+    config PORT
+        int "Port"
+        range 0 65535
+        default 3333
+        help
+            The remote port to which the ESP32 will connect to.
+    
+endmenu
