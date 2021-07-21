@@ -17,10 +17,10 @@
 /** Used for Log messages */
 static const char *TAG_Camera = "Camera";
 
-//WROVER-KIT PIN Map
+//AItinker pinmap. (https://randomnerdtutorials.com/esp32-cam-ai-thinker-pinout/)
 #define CAM_PIN_PWDN -1  //power down is not used
 #define CAM_PIN_RESET -1 //software reset will be performed
-#define CAM_PIN_XCLK 21
+#define CAM_PIN_XCLK 0
 #define CAM_PIN_SIOD 26
 #define CAM_PIN_SIOC 27
 
@@ -28,10 +28,10 @@ static const char *TAG_Camera = "Camera";
 #define CAM_PIN_D6 34
 #define CAM_PIN_D5 39
 #define CAM_PIN_D4 36
-#define CAM_PIN_D3 19
-#define CAM_PIN_D2 18
-#define CAM_PIN_D1 5
-#define CAM_PIN_D0 4
+#define CAM_PIN_D3 21
+#define CAM_PIN_D2 19
+#define CAM_PIN_D1 18
+#define CAM_PIN_D0 5
 #define CAM_PIN_VSYNC 25
 #define CAM_PIN_HREF 23
 #define CAM_PIN_PCLK 22
@@ -71,5 +71,5 @@ static camera_config_t camera_config = {
 /** Power and init the camera */
 esp_err_t camera_init();
 
-/** Take picture TODO: Return pointer to picture to send to server */
+/** Capture Frame- This function will send the picture */ 
 esp_err_t camera_capture();
