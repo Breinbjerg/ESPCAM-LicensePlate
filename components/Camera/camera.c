@@ -12,6 +12,9 @@
 #include <stdio.h>
 #include "camera.h"
 
+/** Used for Log messages */
+static const char *TAG_Camera = "Camera";
+
 /** Send picture to server - Remember to connect to server first */
 static esp_err_t camera_send_picture();
 

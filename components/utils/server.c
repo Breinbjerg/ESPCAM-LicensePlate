@@ -11,6 +11,10 @@
 
 #include "server.h"
 
+
+/** TAG Used for debug msg doing runtime */
+static const char *TAG_SERVER = "SERVER";
+
 int8_t server_init(system_defs **sys)
 
 {

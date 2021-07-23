@@ -20,7 +20,7 @@
 #include "system_defines.h"
 #include "string.h"
 
-static const char *TAG_JSON = "JSON";
+
 
 int8_t json_load_config(const char *jsonstring, system_defs *sys);
 

@@ -24,8 +24,7 @@
 /** Port and IP are defined in menuconfig */
 #define HOST_IP_ADDR CONFIG_IPV4_ADDR
 #define PORT CONFIG_PORT
-/** TAG Used for debug msg doing runtime */
-static const char *TAG_SERVER = "SERVER";
+
 // End of transmission string. Must be appended to data send from this device.
 static const char *EndOfTrans = "\x02\x03\x04\x7F";
 

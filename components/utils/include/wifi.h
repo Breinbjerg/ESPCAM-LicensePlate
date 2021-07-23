@@ -28,12 +28,10 @@
 #define MAX_RETRY  CONFIG_MAXIMUM_RETRYS
 
 
-/** Used for Log messages */
-static const char *TAG_Wifi = "Wifi_STA";
 
 
 /* FreeRTOS event group to signal when we are connected*/
-static EventGroupHandle_t s_wifi_event_group;
+EventGroupHandle_t s_wifi_event_group;
 
 void wifi_init_sta(void);
 

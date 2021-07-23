@@ -14,8 +14,7 @@
 #include "esp_log.h"
 
 
-/** Used for Log messages */
-static const char *TAG_Camera = "Camera";
+
 
 //AItinker pinmap. (https://randomnerdtutorials.com/esp32-cam-ai-thinker-pinout/)
 #define CAM_PIN_PWDN -1  //power down is not used
@@ -37,7 +36,7 @@ static const char *TAG_Camera = "Camera";
 #define CAM_PIN_PCLK 22
 
 
-static camera_config_t camera_config = {
+camera_config_t camera_config = {
     .pin_pwdn = CAM_PIN_PWDN,
     .pin_reset = CAM_PIN_RESET,
     .pin_xclk = CAM_PIN_XCLK,

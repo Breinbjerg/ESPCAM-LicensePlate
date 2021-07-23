@@ -11,6 +11,10 @@
 
 #include "json.h"
 
+/** Used for debug messages */ 
+static const char *TAG_JSON = "JSON";
+
+
 int8_t json_load_config(const char *jsonstring, system_defs *sys)
 {
     int8_t status = 0;

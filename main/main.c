@@ -13,7 +13,6 @@
 #include "esp_system.h"
 #include "wifi.h"
 #include "camera.h"
-#include "esp_camera.h"
 
 
 
@@ -30,5 +29,6 @@ void app_main(void)
    ESP_ERROR_CHECK(ret);
    /** Init wifi and connect to network specified in menuconfig */
    wifi_init_sta();
+   
 
 }
