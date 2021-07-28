@@ -9,7 +9,6 @@
  * 
  */
 
-#include <stdio.h>
 #include "camera.h"
 
 /** Used for Log messages */

@@ -12,8 +12,7 @@
 #include "driver/gpio.h"
 #include "esp_camera.h"
 #include "esp_log.h"
-
-
+#include "sdcard.h"
 
 
 //AItinker pinmap. (https://randomnerdtutorials.com/esp32-cam-ai-thinker-pinout/)
