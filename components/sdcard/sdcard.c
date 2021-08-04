@@ -40,8 +40,8 @@ esp_err_t sdcard_init()
     }
 }
 
-esp_err_t sdcard_save_buffer_as_file(void *buffer, size_t size, size_t len)
-{
+// esp_err_t sdcard_save_buffer_as_file(void *buffer, size_t size, size_t len)
+// {
 
 
-}
+// }

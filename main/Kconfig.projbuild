@@ -1,48 +1,135 @@
-menu "Wifi/TCP Settings"
+menu "Project Settings"
 
-    config WIFI_SSID
-        string "WiFi SSID"
-        default "myssid"
-        help
-            SSID (network name) 
+    choice SD_CARD_OR_WIFI
+        prompt "Select between WiFi or SD-Card to save picture."
+        default SD_CARD_CONFIG
+        help 
+            Selects between to send picture via WiFi or save on SD-Card (Default SD-Card)
+        config SD_CARD_CONFIG
+            bool "SD CARD"
+        config WIFI_CONFIG
+            bool "WiFI"
 
-    config WIFI_PASSWORD
-        string "WiFi Password"
-        default "mypassword"
-        help
-            WiFi password (WPA or WPA2) for the example to use.
-            Can be left blank if the network has no security set.config
-         
-    config MAXIMUM_RETRYS
-        int "Wifi retry"
-        default 10
-        help
-            Amount of times the ESP32 tries to connect to wifi.
+    endchoice
 
-    config IPV4_ADDR
-        string "IPV4 Address"
-        default "192.168.0.165"
-        help
-            IPV4 address of the TCP server. 
+    if WIFI_CONFIG
+        config WIFI_SSID
+            string "WiFi SSID"
+            default "MySSID"
+            help
+                SSID (network name) 
 
-    config PORT
-        int "Port"
-        range 0 65535
-        default 3333
-        help
-            The remote port to which the ESP32 will connect to.
+        config WIFI_PASSWORD
+            string "WiFi Password"
+            default "MYPASSWORD"
+            help
+                WiFi password (WPA or WPA2) for the example to use.
+                Can be left blank if the network has no security set.config
+        
+        config MAXIMUM_RETRYS
+            int "Wifi retry"
+            default 10
+            help
+                Amount of times the ESP32 tries to connect to wifi.
+ 
+        config CONNECT_TCP_SERVER
+            bool "Connect to TCP-Server"
+            default n
+            help
+                Connects to TCP-server to send image taken on device. This will be slower than saving
+                to SD-card. 
+
+        if CONNECT_TCP_SERVER
+            config IPV4_ADDR
+                string "IPV4 Address"
+                default "192.168.0.165"
+                help
+                    IPV4 address of the TCP server. 
+
+            config PORT
+                int "Port"
+                range 0 65535
+                default 3333
+                help
+                    The remote port to which the ESP32 will connect to.
+        endif
+
+    endif
     
+    if SD_CARD_CONFIG
+        config FORMAT_IF_MOUNT_FAILED
+            bool "Format the card if mount failed"
+            default n
+            help
+                If this config item is set, format_if_mount_failed will be set to true and the card will be formatted if
+                the mount has failed.
+    
+    endif
+
+    choice DEFAULT_PINS
+        prompt "Choose Board or pins for Camera"
+        default BOARD_ESP32CAM_AITHINKER
+        help
+            AITinker Boards have default pins for camera interface. If using different board og setup
+            select other pins and insert desired pins. 
+        config BOARD_ESP32CAM_AITHINKER
+            bool "AITinker Board"
+        config BOARD_WROVER_KIT
+            bool "WROOVER Kit board"
+        config OTHER_PINS
+            bool "Other pins"
+    endchoice
+
+    if OTHER_PINS
+        config D0
+            int "D0"
+            default "5"
+      config D1
+            int "D1"
+            default "18"
+      config D2
+            int "D2"
+            default "19"
+      config D3
+            int "D3"
+            default "21"
+      config D4
+            int "D4"
+            default "36"
+      config D5
+            int "D5"
+            default "39"
+      config D6
+            int "D6"
+            default "34"
+      config D7
+            int "D7"
+            default "35"
+      config XCLK
+            int "XCLK"
+            default "0"
+      config PCLK
+            int "PCLK"
+            default "22"
+      config VSYNC
+            int "VSYNC"
+            default "25"
+      config HREF
+            int "HREF"
+            default "23"
+      config SDA
+            int "SDA"
+            default "26"
+      config SCL
+            int "SCL"
+            default "27"
+      config RESET
+            int "RESET"
+            default "-1"
+      config PWDN
+            int "PWDN"
+            default "32"
+    endif
+    
+
 endmenu
-
-menuconfig SDCard Settings
-
-    config FORMAT_IF_MOUNT_FAILED
-        bool "Format the card if mount failed"
-        default n
-        help
-            If this config item is set, format_if_mount_failed will be set to true and the card will be formatted if
-            the mount has failed.
-    
-    config 
-endmenu
-    

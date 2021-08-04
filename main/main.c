@@ -12,9 +12,8 @@
 #include "freertos/task.h"
 #include "esp_system.h"
 #include "wifi.h"
+#include "server.h"
 #include "camera.h"
-
-
 
 void app_main(void)
 {
@@ -27,8 +26,19 @@ void app_main(void)
       ret = nvs_flash_init();
    }
    ESP_ERROR_CHECK(ret);
-   /** Init wifi and connect to network specified in menuconfig */
-   wifi_init_sta();
-   
 
+
+/** Init Wifi if enabled in menuconfig */ 
+#ifdef CONFIG_WIFI_CONFIG
+
+   wifi_init_sta();
+
+#endif
+
+/** init SD-Card if enabled in menuconfig */ 
+#ifdef CONFIG_SD_CARD_CONFIG
+
+   sdcard_init();
+
+#endif
 }
