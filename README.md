@@ -1,6 +1,10 @@
 # ESPCAM-LicensePlate
 
 
+#### SD-Card Notes:
+- When using SD-Card remember to format the card to fat32. 
+
+
 ## Installation: 
 
 ### Visual studio code

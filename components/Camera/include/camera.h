@@ -14,7 +14,6 @@
 #include "esp_log.h"
 #include "sdcard.h"
 
-
 #ifdef CONFIG_BOARD_WROVER_KIT
 
 #define CAM_PIN_PWDN -1  //power down is not used

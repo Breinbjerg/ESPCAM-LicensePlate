@@ -54,11 +54,16 @@ esp_err_t camera_capture()
 
 /**
  * @brief Sends to taken picture to the server. 
+ *        Currently this function can either save to SD-Card or via Wifi to TCP-server.
+ *        This is set in the menuconfig. 
  * 
  * @param fb Struct pointer with relevant info and pointer to data. 
  * @return esp_err_t 
  */
 esp_err_t camera_send_picture(camera_fb_t *fb)
 {
+
+
+
     return ESP_OK;
 }

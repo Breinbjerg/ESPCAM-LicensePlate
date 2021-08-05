@@ -9,8 +9,8 @@
  * 
  */
 
-#ifndef __SERVER_H__
-#define __SERVER_H__
+#pragma once
+
 
 #include "stdint.h"
 #include "json.h"
@@ -39,5 +39,3 @@ int8_t server_load_config(system_defs *sys);
 int8_t server_send_config(system_defs *sys);
 
 int8_t server_send_adxl_data(system_defs *sys, int16_t *data_x, int16_t *data_y, int16_t *data_z, int reads);
-
-#endif /* __SERVER_H__ */
