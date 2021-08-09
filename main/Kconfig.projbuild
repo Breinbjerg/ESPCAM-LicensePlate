@@ -1,5 +1,11 @@
 menu "Project Settings"
 
+    config FILENAME_PICTURE 
+        string "Filename for Picture"
+        default "Picture"
+        help
+            Set the filename for each picture taken. The program will add a number afterwards to differentiate between.
+
     choice SD_CARD_OR_WIFI
         prompt "Select between WiFi or SD-Card to save picture."
         default SD_CARD_CONFIG
@@ -33,7 +39,7 @@ menu "Project Settings"
                 Amount of times the ESP32 tries to connect to wifi.
  
         config CONNECT_TCP_SERVER
-            bool "Connect to TCP-Server"
+            bool "Connect to TCP-Server (Not fully implemented yet)"
             default n
             help
                 Connects to TCP-server to send image taken on device. This will be slower than saving

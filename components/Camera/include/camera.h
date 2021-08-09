@@ -12,7 +12,14 @@
 #include "driver/gpio.h"
 #include "esp_camera.h"
 #include "esp_log.h"
+
+#ifdef CONFIG_SD_CARD_CONFIG
 #include "sdcard.h"
+#endif
+
+#ifdef CONFIG_WIFI_CONFIG
+#include "wifi.h"
+#endif
 
 #ifdef CONFIG_BOARD_WROVER_KIT
 
@@ -36,8 +43,6 @@
 
 #endif
 
-
-
 //AItinker pinmap. (https://randomnerdtutorials.com/esp32-cam-ai-thinker-pinout/)
 #ifdef CONFIG_BOARD_ESP32CAM_AITHINKER
 
@@ -60,7 +65,6 @@
 #define CAM_PIN_PCLK 22
 
 #endif
-
 
 camera_config_t camera_config = {
     .pin_pwdn = CAM_PIN_PWDN,
@@ -93,8 +97,10 @@ camera_config_t camera_config = {
     .grab_mode = CAMERA_GRAB_WHEN_EMPTY //CAMERA_GRAB_LATEST. Sets when buffers should be filled
 };
 
+uint16_t picture_count = 0;
+
 /** Power and init the camera */
 esp_err_t camera_init();
 
-/** Capture Frame- This function will send the picture */ 
+/** Capture Frame- This function will send the picture */
 esp_err_t camera_capture();
