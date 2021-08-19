@@ -1,8 +1,10 @@
 # ESPCAM-LicensePlate
 
 
-#### SD-Card Notes:
+#### Notes:
 - When using SD-Card remember to format the card to fat32. 
+- If you are using a AI-Tinker board remember to enable PSRAM - Found in menuconfig->components->esp32-specific
+
 
 
 ## Installation: 
