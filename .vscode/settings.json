@@ -8,6 +8,9 @@
     "nvs_flash.h": "c",
     "sdcard.h": "c",
     "sdmmc_cmd.h": "c",
-    "esp_timer.h": "c"
+    "esp_timer.h": "c",
+    "gpio.h": "c",
+    "*.inc": "c",
+    "*.ipp": "c"
   }
 }
