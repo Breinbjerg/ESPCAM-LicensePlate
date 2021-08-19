@@ -6,6 +6,17 @@ menu "Project Settings"
         help
             Set the filename for each picture taken. The program will add a number afterwards to differentiate between.
 
+    choice PIXEL_FORMAT_PICTURE
+        prompt "Select format for the picture"
+        default PIXEL_FORMAT_JPEG
+        help
+            Selecets between pixelformat. Be aware this is only the format not the size.
+        config PIXEL_FORMAT_JPEG
+            bool "JPEG"
+        config PIXEL_FORMAT_GRAYSCALE
+            bool "Grayscale"
+    endchoice
+
     choice SD_CARD_OR_WIFI
         prompt "Select between WiFi or SD-Card to save picture."
         default SD_CARD_CONFIG
