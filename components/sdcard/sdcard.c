@@ -69,7 +69,6 @@ esp_err_t sdcard_init_mount_as_filesystem()
  */
 esp_err_t sdcard_save_buffer_as_file(void *buffer, size_t size, size_t len, const char *filename)
 {
-    ESP_LOGD(TAG, "Trying to open the file: %s", filename);
     FILE *file = fopen(filename, "w");
     if (file == NULL)
     {

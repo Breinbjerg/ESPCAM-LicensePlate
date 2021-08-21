@@ -124,10 +124,14 @@ static esp_err_t camera_save_picture(camera_fb_t *fb)
 {
 
 #ifdef CONFIG_SD_CARD_CONFIG
-    char *filename = malloc(50);
+    char *filename = malloc(32);
+    //sprintf(filename, MOUNTPOINT "/" CONFIG_FILENAME_PICTURE "-%d.bmp", picture_count);
+    //filename[31] = '\0';
+    //sprintf(filename, "/sdcard/PegoutPics_%d", picture_count);
+    //filename[strlen(filename)] = '\0';
     sprintf(filename, "/sdcard/pic_%d", picture_count);
     filename[strlen(filename)] = '\0';
-    ESP_LOGI(TAG_Camera, "Filename: %s", filename);
+    ESP_LOGI(TAG_Camera, "Filename: %s with length of %d", filename, strlen(filename));
     uint8_t *buf = NULL;
     size_t buf_len = 0;
     bool converted = frame2bmp(fb, &buf, &buf_len);
@@ -145,6 +149,7 @@ static esp_err_t camera_save_picture(camera_fb_t *fb)
     /** TODO: Implement server function to send picture. */
     ESP_LOGE(TAG_Camera, "Not supposed to be here atm");
 #endif
+    free(buf);
     free(filename);
     picture_count++;
     ESP_LOGD(TAG_Camera, "Picture count: %d", picture_count);
