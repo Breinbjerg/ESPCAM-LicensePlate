@@ -11,11 +11,11 @@
 
 #pragma once
 
-
 #include "driver/gpio.h"
 #include "esp_camera.h"
 #include "esp_log.h"
 #include "string.h"
+#include "system_defines.h"
 
 #ifdef CONFIG_SD_CARD_CONFIG
 #include "sdcard.h"
@@ -70,9 +70,8 @@
 
 #endif
 
-
 /** Power and init the camera */
-esp_err_t camera_init();
+esp_err_t camera_init(system_defs *sys_defs);
 
 /** Capture Frame- This function will send the picture */
 esp_err_t camera_capture();

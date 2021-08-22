@@ -50,6 +50,7 @@ static camera_config_t camera_config = {
 /** Used for Log messages */
 static const char *TAG_Camera = "Camera";
 
+/** Used when storing on the SD-card */
 static uint8_t picture_count = 0;
 
 /** Send picture to server - Remember to connect to server first */
@@ -63,14 +64,17 @@ static esp_err_t camera_save_picture();
  * 
  * @return esp_err_t 
  */
-esp_err_t camera_init()
+esp_err_t camera_init(system_defs *sys_defs)
 {
 
     /** TODO: Power to camera  GPIO */
 
     /** If SD selected init */
 #ifdef CONFIG_SD_CARD_CONFIG
-    sdcard_init_mount_as_filesystem();
+    if (!sdcard_init_mount_as_filesystem())
+    {
+        return ESP_FAIL;
+    }
 #endif
 
     /** If Wifi seleceted init */
@@ -79,7 +83,14 @@ esp_err_t camera_init()
 
     /** If TCP-server selected init */
 #ifdef CONFIG_CONNECT_TCP_SERVER
-    server_init();
+    if (!server_init(&sys_defs))
+    {
+        return ESP_FAIL;
+    }
+    if (!server_connect(sys_defs))
+    {
+        return ESP_FAIL;
+    }
 #endif
 
 #endif
@@ -96,7 +107,7 @@ esp_err_t camera_init()
 }
 
 /** Take picture TODO: Return pointer to picture to send to server */
-esp_err_t camera_capture()
+esp_err_t camera_capture(system_defs *sys_defs)
 {
     //acquire a frame
     camera_fb_t *fb = esp_camera_fb_get();
@@ -107,7 +118,7 @@ esp_err_t camera_capture()
     }
     /** Save the taken picture */
     ESP_LOGI(TAG_Camera, "Saving picture");
-    camera_save_picture(fb);
+    camera_save_picture(fb, sys_defs);
 
     return ESP_OK;
 }
@@ -120,7 +131,7 @@ esp_err_t camera_capture()
  * @param fb Struct pointer with relevant info and pointer to data. 
  * @return esp_err_t 
  */
-static esp_err_t camera_save_picture(camera_fb_t *fb)
+static esp_err_t camera_save_picture(camera_fb_t *fb, system_defs *sys_defs)
 {
 
 #ifdef CONFIG_SD_CARD_CONFIG
@@ -143,15 +154,24 @@ static esp_err_t camera_save_picture(camera_fb_t *fb)
     //return the frame buffer back to the driver for reuse
     esp_camera_fb_return(fb);
     sdcard_save_buffer_as_file(buf, 1, buf_len, filename);
+    picture_count++;
+    free(filename);
 #endif
 
 #ifdef CONFIG_CONNECT_TCP_SERVER
     /** TODO: Implement server function to send picture. */
-    ESP_LOGE(TAG_Camera, "Not supposed to be here atm");
+    uint8_t *buf = NULL;
+    size_t buf_len = 0;
+    bool converted = frame2bmp(fb, &buf, &buf_len);
+    if (!converted)
+    {
+        ESP_LOGE(TAG_Camera, "BMP conversion failed");
+        return ESP_FAIL;
+    }
+    /** Free space */
+    esp_camera_fb_return(fb);
+    server_send_picture(buf, buf_len, sys_defs);
 #endif
     free(buf);
-    free(filename);
-    picture_count++;
-    ESP_LOGD(TAG_Camera, "Picture count: %d", picture_count);
     return ESP_OK;
 }

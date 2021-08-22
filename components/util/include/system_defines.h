@@ -8,9 +8,8 @@
  * @copyright Copyright (c) 2021
  * 
  */
-#ifndef __SYSTEM_DEFINES_H__
-#define __SYSTEM_DEFINES_H__
 
+#pragma once
 
 
 /** Global struct to store configs etc etc */
@@ -18,8 +17,4 @@ typedef struct
 {
     char DeviceName[10];
     int socket;
-    int sampleFreqADXL;
-    int sampleFreqMIC;
 } system_defs;
-
-#endif /* __SYSTEM_DEFINES_H__ */

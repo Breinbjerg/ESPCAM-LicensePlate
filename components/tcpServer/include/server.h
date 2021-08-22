@@ -11,15 +11,13 @@
 
 #pragma once
 
-
 #include "stdint.h"
-#include "json.h"
 #include "esp_wifi.h"
 #include "esp_netif.h"
 #include "lwip/err.h"
 #include "lwip/sockets.h"
 #include "esp_log.h"
-#include "system_defines.h"
+#include "system_defs.h"
 
 /** Port and IP are defined in menuconfig */
 #define HOST_IP_ADDR CONFIG_IPV4_ADDR
@@ -34,8 +32,4 @@ int8_t server_connect(system_defs *sys);
 
 int8_t server_disconnect(system_defs *sys);
 
-int8_t server_load_config(system_defs *sys);
-
-int8_t server_send_config(system_defs *sys);
-
-int8_t server_send_adxl_data(system_defs *sys, int16_t *data_x, int16_t *data_y, int16_t *data_z, int reads);
+int8_t server_send_picture(uint8_t *buf, size_t len, system_defs *sys);
