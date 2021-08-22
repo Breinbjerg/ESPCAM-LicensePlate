@@ -1,4 +1,4 @@
 idf_component_register(SRCS
                     INCLUDE_DIRS "include"
                     REQUIRES "esp_wifi"
-                    PRIV_REQUIRES "esp_netif" "utils")
+                    PRIV_REQUIRES "esp_netif" "util")

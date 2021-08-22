@@ -66,12 +66,13 @@ static esp_err_t camera_save_picture();
  */
 esp_err_t camera_init(system_defs *sys_defs)
 {
-
+    esp_err_t ret;
     /** TODO: Power to camera  GPIO */
 
     /** If SD selected init */
 #ifdef CONFIG_SD_CARD_CONFIG
-    if (!sdcard_init_mount_as_filesystem())
+    ret = sdcard_init_mount_as_filesystem();
+    if (ret != ESP_OK)
     {
         return ESP_FAIL;
     }
@@ -83,11 +84,13 @@ esp_err_t camera_init(system_defs *sys_defs)
 
     /** If TCP-server selected init */
 #ifdef CONFIG_CONNECT_TCP_SERVER
-    if (!server_init(&sys_defs))
+    ret = !server_init(&sys_defs);
+    if (ret != ESP_OK)
     {
         return ESP_FAIL;
     }
-    if (!server_connect(sys_defs))
+    ret = server_connect(sys_defs);
+    if (ret != ESP_OK)
     {
         return ESP_FAIL;
     }
@@ -143,6 +146,7 @@ static esp_err_t camera_save_picture(camera_fb_t *fb, system_defs *sys_defs)
     sprintf(filename, "/sdcard/pic_%d", picture_count);
     filename[strlen(filename)] = '\0';
     ESP_LOGI(TAG_Camera, "Filename: %s with length of %d", filename, strlen(filename));
+#ifdef CONFIG_PIXEL_FORMAT_GRAYSCALE
     uint8_t *buf = NULL;
     size_t buf_len = 0;
     bool converted = frame2bmp(fb, &buf, &buf_len);
@@ -154,6 +158,9 @@ static esp_err_t camera_save_picture(camera_fb_t *fb, system_defs *sys_defs)
     //return the frame buffer back to the driver for reuse
     esp_camera_fb_return(fb);
     sdcard_save_buffer_as_file(buf, 1, buf_len, filename);
+#endif
+    sdcard_save_buffer_as_file(fb->buf, 1, fb->len, filename);
+    esp_camera_fb_return(fb);
     picture_count++;
     free(filename);
 #endif
@@ -172,6 +179,5 @@ static esp_err_t camera_save_picture(camera_fb_t *fb, system_defs *sys_defs)
     esp_camera_fb_return(fb);
     server_send_picture(buf, buf_len, sys_defs);
 #endif
-    free(buf);
     return ESP_OK;
 }
