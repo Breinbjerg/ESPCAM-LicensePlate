@@ -11,6 +11,7 @@
     "esp_timer.h": "c",
     "gpio.h": "c",
     "*.inc": "c",
-    "*.ipp": "c"
+    "*.ipp": "c",
+    "system_defines.h": "c"
   }
 }
