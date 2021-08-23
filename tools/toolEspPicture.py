@@ -22,7 +22,7 @@ async def main(configs: dict):
 @click.command()
 @click.argument('IPV4', type=str)
 @click.argument('PORT', type=str)
-def handle_args(ipv4, port) -> dict:
+def handle_args(ipv4, port):
     """
      ESP32-CAM: Receive and show picture. Enable option to save the picture in given path.\n
     IPV4: Address for the TCP-Server (Use Own IP)\n
@@ -34,9 +34,9 @@ def handle_args(ipv4, port) -> dict:
         'port': int(port)
     }
     print(f'IPV4={conf_args["ip"]} - Port number= {conf_args["port"]}')
-    return conf_args
+    asyncio.run(main(conf_args))
 
 
 if __name__ == '__main__':
-    conf = handle_args()
-    asyncio.run(main(conf))
+    handle_args()
+

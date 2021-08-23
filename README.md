@@ -4,7 +4,11 @@
 #### Notes:
 - When using SD-Card remember to format the card to fat32. 
 - If you are using a AI-Tinker board remember to enable PSRAM - Found in menuconfig->components->esp32-specific
-
+- When using tools you need to create a virtualenv. 
+    1. When created source the activate script to enter the venv.
+    2. To start the script you need to add folder tools to pythonpath. 
+        1. run `PYTHONPATH=$PYTHONPATH:pwd python tools/toolEspPicture.py`
+        2. To see options for tool use _--help_
 
 
 ## Installation: 
