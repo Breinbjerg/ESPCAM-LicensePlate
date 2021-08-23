@@ -167,6 +167,7 @@ static esp_err_t camera_save_picture(camera_fb_t *fb, system_defs *sys_defs)
 
 #ifdef CONFIG_CONNECT_TCP_SERVER
     /** TODO: Implement server function to send picture. */
+#ifdef CONFIG_PIXEL_FORMAT_GRAYSCALE
     uint8_t *buf = NULL;
     size_t buf_len = 0;
     bool converted = frame2bmp(fb, &buf, &buf_len);
@@ -178,6 +179,7 @@ static esp_err_t camera_save_picture(camera_fb_t *fb, system_defs *sys_defs)
     /** Free space */
     esp_camera_fb_return(fb);
     server_send_picture(buf, buf_len, sys_defs);
+#endif
 #endif
     return ESP_OK;
 }
