@@ -11,7 +11,6 @@
 
 #pragma once
 
-
 /** Global struct to store configs etc etc */
 typedef struct
 {

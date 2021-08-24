@@ -15,9 +15,6 @@
 #include "esp_system.h"
 #include "camera.h"
 
-/** Pointer to system struct */
-system_defs *sys_defs;
-
 void app_main(void)
 {
    esp_err_t ret;
@@ -35,7 +32,8 @@ void app_main(void)
    /** Init the camera 
     * This function will init either Wifi or SDCard depending on settings in menuconfig.
     * No Further actions is needed. If succssfull you can take pictures. */
-   ret = camera_init(sys_defs);
+   ret = camera_init();
+
    if (ret != ESP_OK)
    {
 

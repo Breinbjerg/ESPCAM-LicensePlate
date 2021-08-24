@@ -12,6 +12,8 @@
     "gpio.h": "c",
     "*.inc": "c",
     "*.ipp": "c",
-    "system_defines.h": "c"
+    "system_defines.h": "c",
+    "server.h": "c",
+    "wifi_config.h": "c"
   }
 }

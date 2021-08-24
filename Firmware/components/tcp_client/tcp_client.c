@@ -9,10 +9,13 @@
  * 
  */
 
-#include "server.h"
+#include "tcp_client.h"
 
 /** TAG Used for debug msg doing runtime */
 static const char *TAG_SERVER = "SERVER";
+
+// End of transmission string.
+static const char *EndOfTrans = "\x02\x03\x04\x7F";
 
 /**
  * @brief Init the server connection. Creates socket and save it in the System construct. 
@@ -20,32 +23,21 @@ static const char *TAG_SERVER = "SERVER";
  * @param sys 
  * @return int8_t 
  */
-int8_t server_init(system_defs **sys)
+int8_t server_init(int *sock)
 {
-    system_defs *sys_def;
     int addr_family = 0;
     int ip_protocol = 0;
     ip_protocol = IPPROTO_IP;
     addr_family = AF_INET;
+    int socks = 0;
 
-    int sock = socket(addr_family, SOCK_STREAM, ip_protocol);
-    if (sock < 0)
+    socks = socket(addr_family, SOCK_STREAM, ip_protocol);
+    if (socks < 0)
     {
         ESP_LOGE(TAG_SERVER, "Unable to create socket: errno %d", errno);
         return -1;
     }
-
-    sys_def = (system_defs *)malloc(sizeof(*sys_def));
-    if (!sys_def)
-    {
-        ESP_LOGE(TAG_SERVER, "Malloc Error: Creating System defs");
-        return -1;
-    }
-
-    /** Assign the newly created socket to the sys struct */
-    sys_def->socket = sock;
-    *sys = sys_def;
-
+    *sock = socks;
     return 0;
 }
 
@@ -55,7 +47,7 @@ int8_t server_init(system_defs **sys)
  * @param sys System config. 
  * @return int8_t 
  */
-int8_t server_connect(system_defs *sys)
+int8_t server_connect(int *socket)
 {
 
     char host_ip[] = HOST_IP_ADDR;
@@ -67,7 +59,7 @@ int8_t server_connect(system_defs *sys)
 
     ESP_LOGI(TAG_SERVER, "Connecting to %s:%d", host_ip, PORT);
 
-    int err = connect(sys->socket, (struct sockaddr *)&dest_addr, sizeof(struct sockaddr_in6));
+    int err = connect(*socket, (struct sockaddr *)&dest_addr, sizeof(struct sockaddr_in6));
     if (err != 0)
     {
         ESP_LOGE(TAG_SERVER, "Socket unable to connect: errno %d", errno);
@@ -84,12 +76,12 @@ int8_t server_connect(system_defs *sys)
  * @param sys System config struct. 
  * @return int8_t 
  */
-int8_t server_disconnect(system_defs *sys)
+int8_t server_disconnect(int *socket)
 {
 
     ESP_LOGI(TAG_SERVER, "Closing the socket");
-    close(sys->socket);
-    sys->socket = 0;
+    close(*socket);
+    *socket = 0;
     return 0;
 }
 
@@ -100,22 +92,22 @@ int8_t server_disconnect(system_defs *sys)
  * @param len The length of the data buffer
  * @return int8_t 
  */
-int8_t server_send_picture(uint8_t *buf, size_t len, system_defs *sys)
+int8_t server_send_picture(void *buf, size_t len, int *socket)
 {
     int err = 0;
     ESP_LOGD(TAG_SERVER, "Sending picture");
-    send(sys->socket, buf, len);
+    send(*socket, buf, len, 0);
     if (err < 0)
     {
         ESP_LOGE(TAG_SERVER, "Error occurred during sending: errno %d", errno);
         return -1;
     }
-    /** Send End of transmissions string */ 
-    err = send(sys->socket, EndOfTrans, sizeof(EndOfTrans), 0);
+    /** Send End of transmissions string */
+    err = send(*socket, EndOfTrans, sizeof(EndOfTrans), 0);
     if (err < 0)
     {
         ESP_LOGE(TAG_SERVER, "Error occurred during sending: errno %d", errno);
         return -1;
     }
-    
+    return 0;
 }

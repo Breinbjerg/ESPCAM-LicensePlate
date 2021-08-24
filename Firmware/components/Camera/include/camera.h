@@ -17,12 +17,14 @@
 #include "string.h"
 #include "system_defines.h"
 
+
 #ifdef CONFIG_SD_CARD_CONFIG
 #include "sdcard.h"
 #endif
 
 #ifdef CONFIG_WIFI_CONFIG
 #include "wifi.h"
+#include "tcp_client.h"
 #endif
 
 #ifdef CONFIG_BOARD_WROVER_KIT
@@ -71,7 +73,7 @@
 #endif
 
 /** Power and init the camera */
-esp_err_t camera_init(system_defs *sys_defs);
+esp_err_t camera_init();
 
 /** Capture Frame- This function will send the picture */
 esp_err_t camera_capture();

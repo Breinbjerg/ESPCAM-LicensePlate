@@ -47,12 +47,17 @@ static camera_config_t camera_config = {
     .grab_mode = CAMERA_GRAB_WHEN_EMPTY //CAMERA_GRAB_LATEST. Sets when buffers should be filled
 };
 
-/** Used for Log messages */
-static const char *TAG_Camera = "Camera";
-
+#ifdef CONFIG_SD_CARD_CONFIG
 /** Used when storing on the SD-card */
 static uint8_t picture_count = 0;
+#else
+/** Used when talking to TCP server */
+static int sock = 0;
+#endif
 
+/** Used for Log messages */
+
+static const char *TAG_Camera = "Camera";
 /** Send picture to server - Remember to connect to server first */
 static esp_err_t camera_save_picture();
 
@@ -64,11 +69,10 @@ static esp_err_t camera_save_picture();
  * 
  * @return esp_err_t 
  */
-esp_err_t camera_init(system_defs *sys_defs)
+esp_err_t camera_init()
 {
     esp_err_t ret;
     /** TODO: Power to camera  GPIO */
-
     /** If SD selected init */
 #ifdef CONFIG_SD_CARD_CONFIG
     ret = sdcard_init_mount_as_filesystem();
@@ -81,15 +85,14 @@ esp_err_t camera_init(system_defs *sys_defs)
     /** If Wifi seleceted init */
 #ifdef CONFIG_WIFI_CONFIG
     wifi_init_sta();
-
     /** If TCP-server selected init */
 #ifdef CONFIG_CONNECT_TCP_SERVER
-    ret = !server_init(&sys_defs);
+    ret = server_init(&sock);
     if (ret != ESP_OK)
     {
         return ESP_FAIL;
     }
-    ret = server_connect(sys_defs);
+    ret = server_connect(&sock);
     if (ret != ESP_OK)
     {
         return ESP_FAIL;
@@ -110,7 +113,7 @@ esp_err_t camera_init(system_defs *sys_defs)
 }
 
 /** Take picture TODO: Return pointer to picture to send to server */
-esp_err_t camera_capture(system_defs *sys_defs)
+esp_err_t camera_capture()
 {
     //acquire a frame
     camera_fb_t *fb = esp_camera_fb_get();
@@ -121,7 +124,7 @@ esp_err_t camera_capture(system_defs *sys_defs)
     }
     /** Save the taken picture */
     ESP_LOGI(TAG_Camera, "Saving picture");
-    camera_save_picture(fb, sys_defs);
+    camera_save_picture(fb);
 
     return ESP_OK;
 }
@@ -134,7 +137,7 @@ esp_err_t camera_capture(system_defs *sys_defs)
  * @param fb Struct pointer with relevant info and pointer to data. 
  * @return esp_err_t 
  */
-static esp_err_t camera_save_picture(camera_fb_t *fb, system_defs *sys_defs)
+static esp_err_t camera_save_picture(camera_fb_t *fb)
 {
 
 #ifdef CONFIG_SD_CARD_CONFIG
@@ -166,7 +169,7 @@ static esp_err_t camera_save_picture(camera_fb_t *fb, system_defs *sys_defs)
 #endif
 
 #ifdef CONFIG_CONNECT_TCP_SERVER
-    /** TODO: Implement server function to send picture. */
+#ifdef CONFIG_PIXEL_FORMAT_GRAYSCALE
     uint8_t *buf = NULL;
     size_t buf_len = 0;
     bool converted = frame2bmp(fb, &buf, &buf_len);
@@ -177,7 +180,10 @@ static esp_err_t camera_save_picture(camera_fb_t *fb, system_defs *sys_defs)
     }
     /** Free space */
     esp_camera_fb_return(fb);
-    server_send_picture(buf, buf_len, sys_defs);
+    server_send_picture(buf, buf_len, &sock);
+    free(buf);
+    buf_len = 0;
+#endif
 #endif
     return ESP_OK;
 }
