@@ -147,21 +147,12 @@ menu "Project Settings"
             int "PWDN"
             default "32"
     endif
-    
 
-    config PICTURE_INTERVAL
-        bool "Take pictures with interal"
-        default n
-        help 
-            Set this option if you want to take coninous pictures with specifik interval. 
-    
-    if PICTURE_INTERVAL
-        config PICTURE_INTERVAL_TIME
-        int "Time interval (Secs)"
-        default 20
-        help
-            Time between pictures taken in seconds. 
-    endif
+    config PICTURE_INTERVAL_TIME
+    int "Time interval (Secs)"
+    default 20
+    help
+        Time between pictures taken in seconds. 
 
 
 endmenu

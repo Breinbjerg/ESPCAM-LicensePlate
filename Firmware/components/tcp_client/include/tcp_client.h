@@ -17,19 +17,16 @@
 #include "lwip/err.h"
 #include "lwip/sockets.h"
 #include "esp_log.h"
-#include "system_defs.h"
+#include "system_defines.h"
 
 /** Port and IP are defined in menuconfig */
 #define HOST_IP_ADDR CONFIG_IPV4_ADDR
 #define PORT CONFIG_PORT
 
-// End of transmission string. Must be appended to data send from this device.
-static const char *EndOfTrans = "\x02\x03\x04\x7F";
+int8_t server_init(int *socket);
 
-int8_t server_init(system_defs **sys);
+int8_t server_connect(int *socket);
 
-int8_t server_connect(system_defs *sys);
+int8_t server_disconnect(int *socket);
 
-int8_t server_disconnect(system_defs *sys);
-
-int8_t server_send_picture(uint8_t *buf, size_t len, system_defs *sys);
+int8_t server_send_picture(void *buf, size_t len, int *socket);
