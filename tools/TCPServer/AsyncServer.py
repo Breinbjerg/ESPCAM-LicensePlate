@@ -6,14 +6,14 @@
 """
 import asyncio
 import logging
-import datetime
-import json
+from tools.espPic.espPicMethods import EspPicTool
 
 
 class TCPServerProtocol(asyncio.Protocol):
 
-    def __init__(self):
+    def __init__(self, config: dict):
         self.data = b""
+        self.imagehandle = EspPicTool(config["path"], config["pic_format"])
 
     def connection_made(self, transport):
         self.peername = transport.get_extra_info('peername')
@@ -22,7 +22,7 @@ class TCPServerProtocol(asyncio.Protocol):
         self.transport = transport
 
     def data_received(self, data):
-        self.logger.debug(f'Recived the msg: {data}')
+        #self.logger.debug(f'Received data package')
         self.data += data
         if self.data[-4:] == b"\x02\x03\x04\x7F":
             self.logger.debug(f'Found the end of transmission. Handling data now')
@@ -36,10 +36,6 @@ class TCPServerProtocol(asyncio.Protocol):
 
     def _handle_data(self):
         self.logger.debug('Handling data:')
-        # See first byte for type of msg
-
-    def _timestamp(self) -> None:
-        """
-        The first message from the ESP32 after sampling
-        Call this function to set timestamp for sampled data
-        """
+        self.imagehandle.load_image_from_bytes(self.data[:-4])
+        self.imagehandle.save_picture()
+        self.data = b""
