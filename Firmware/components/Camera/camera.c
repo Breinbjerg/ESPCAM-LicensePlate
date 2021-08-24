@@ -179,11 +179,13 @@ static esp_err_t camera_save_picture(camera_fb_t *fb)
         return ESP_FAIL;
     }
     /** Free space */
-    esp_camera_fb_return(fb);
-    server_send_picture(buf, buf_len, &sock);
+
     free(buf);
     buf_len = 0;
 #endif
+    // If JPEG picture. No conversion is needed.
+    server_send_picture(fb->buf, fb->len, &sock);
+    esp_camera_fb_return(fb);
 #endif
     return ESP_OK;
 }

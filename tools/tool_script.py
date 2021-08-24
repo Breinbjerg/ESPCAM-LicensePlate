@@ -4,6 +4,7 @@
 the ESP32-Cam.
 
 TODO: Add Labeling functionality for ML/tinyML.
+TODO: If relevant add more picture formats support.
 """
 import sys
 import click
@@ -11,7 +12,7 @@ from socket import AF_INET
 import asyncio
 from tools.TCPServer.AsyncServer import TCPServerProtocol
 import logging
-from espPic.espPicMethods import test_storage_path
+from tools.espPic.espPicMethods import test_storage_path
 
 
 async def main(configs: dict):
@@ -24,7 +25,7 @@ async def main(configs: dict):
 
 
 @click.command()
-@click.argument('IPV4', type=str)
+@click.argument('IPV4', type=str, )
 @click.argument('PORT', type=str)
 @click.argument('PATH', type=str)
 @click.option('-d', '--debug', is_flag=True, help="Show debug messages from the server")
@@ -36,12 +37,18 @@ async def main(configs: dict):
               help="Set picture format to bmp (bitmap). Used with lower quality pictures.(Default on)")
 @click.option('--jpeg', 'pic_format', flag_value="jpeg",
               help="Set picture format to jpeg.")
-def cli(ipv4, port, debug, path, save_flag, pic_format):
+@click.option('-f', '--filename', type=str, default='Picture',
+              help="Filename for picture. If more than one i taken this script will add 1-2-3 etc."
+                   "Default name is Picture.")
+@click.option('-s', '--show', is_flag=True, help="Show received pictures in GUI")
+def cli(ipv4, port, debug, path, save_flag, pic_format, filename, show):
     """
-     ESP32-CAM: Receive and show picture. Enable option to save the picture in given path.\n
-    IPV4: Address for the TCP-Server (Use Own IP)\n
-    PORT: Port number for the TCP-server.\n
-    PATH: Path see either load specific image or store images received from ESPCAM. See options.
+    Small tool which creates a TCP-server to receive images from the ESPCAM board.
+    This script is mainly for TCP and saving images, but can be used to load a single image.
+    3 Arguments must be given to run the script, and there is optional arguments too.\n
+    IPV4: Address for the TCP-Server (Use local iP)\n
+    PORT: Port number for the TCP-server (Use a high number e.g 6000).\n
+    PATH: Path to either load specific image or store images received from ESPCAM. See options.
     """
     if debug:
         logging.basicConfig(level=logging.DEBUG)
@@ -58,7 +65,9 @@ def cli(ipv4, port, debug, path, save_flag, pic_format):
         'ip': ipv4,
         'port': int(port),
         'path': path,
-        'pic_format': pic_format
+        'pic_format': pic_format,
+        'filename': filename,
+        'showpic': show
     }
     asyncio.run(main(conf_args))
 

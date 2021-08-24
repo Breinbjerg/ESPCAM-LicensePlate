@@ -1,8 +1,6 @@
 """
 :Synopsis: Uses TCP-Server to receive and save the received picture on given filesystem.
 :Author: Steffen Breinbjerg
-:Latets update:
-:Version: 0.1
 """
 import logging
 import os
@@ -17,13 +15,14 @@ class EspPicTool:
     Basic methods to save and load pictures.
     """
 
-    def __init__(self, path: str, pictype: str):
-
-        self.path = path
-        self.format = pictype
+    def __init__(self, config: dict):
+        self.path = config["path"]
+        self.format = config["pic_format"]
         self.count = 0
         self.image_bytes = b""
         self.logger = logging.getLogger("EspPicTool")
+        self.filename = config["filename"]
+        self.show_image_bool = config["showpic"]
 
     def load_image_from_bytes(self, image_bytes):
         """
@@ -55,12 +54,14 @@ class EspPicTool:
         Saves the picture to given path.
         Load image from bytes is required to run first, else this will fail.
         """
-        filename = f'{self.path}/PictureTest{self.count}'
+        filename = f'{self.path}/{self.filename}-{self.count}'
         self.logger.debug(f'Trying to save picture {filename}')
         try:
             self.im.save(filename, self.format)
             self.count += 1
             self.logger.debug("Successfully saved the image.")
+            if self.show_image_bool:
+                self.show_image()
         except IOError:
             sys.exit("Error: func() save_picture espPicMethods.py -> IOError: File could not be written")
         except ValueError:

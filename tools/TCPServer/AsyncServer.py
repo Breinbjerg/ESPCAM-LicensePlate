@@ -13,7 +13,7 @@ class TCPServerProtocol(asyncio.Protocol):
 
     def __init__(self, config: dict):
         self.data = b""
-        self.imagehandle = EspPicTool(config["path"], config["pic_format"])
+        self.imagehandle = EspPicTool(config)
 
     def connection_made(self, transport):
         self.peername = transport.get_extra_info('peername')
@@ -22,7 +22,7 @@ class TCPServerProtocol(asyncio.Protocol):
         self.transport = transport
 
     def data_received(self, data):
-        #self.logger.debug(f'Received data package')
+        # self.logger.debug(f'Received data package')
         self.data += data
         if self.data[-4:] == b"\x02\x03\x04\x7F":
             self.logger.debug(f'Found the end of transmission. Handling data now')
