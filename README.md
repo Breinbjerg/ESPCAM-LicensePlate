@@ -6,9 +6,8 @@
 - If you are using a AI-Tinker board remember to enable PSRAM - Found in menuconfig->components->esp32-specific
 - When using tools you need to create a virtualenv. 
     1. When created source the activate script to enter the venv.
-    2. To start the script you need to add folder tools to pythonpath. 
-        1. run `PYTHONPATH=$PYTHONPATH:pwd python tools/toolEspPicture.py`
-        2. To see options for tool use _--help_
+    2. Run the command `pip install -e .` This will install necessary packages and make the script executable.
+    3. Run `toolEspPicture --help` to see Arguments and options.
 
 
 ## Installation: 
