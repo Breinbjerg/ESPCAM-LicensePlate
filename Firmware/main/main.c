@@ -15,6 +15,16 @@
 #include "esp_system.h"
 #include "camera.h"
 
+void TakePicTask(void *pvParameters)
+{
+
+   while (1)
+   {
+      camera_capture();
+      vTaskDelay((CONFIG_PICTURE_INTERVAL_TIME * 1000) / portTICK_RATE_MS);
+   }
+}
+
 void app_main(void)
 {
    esp_err_t ret;
@@ -41,10 +51,5 @@ void app_main(void)
       return;
    }
 
-   while (1)
-   {
-      /** Take a picture -This will automatically store the picture depending on settings in menuconfig. */
-      camera_capture();
-      vTaskDelay((CONFIG_PICTURE_INTERVAL_TIME * 1000) / portTICK_RATE_MS);
-   }
+   xTaskCreate(TakePicTask, "PicTask", 2048, NULL, 1, NULL);
 }

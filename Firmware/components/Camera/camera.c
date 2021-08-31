@@ -125,6 +125,7 @@ esp_err_t camera_capture()
     /** Save the taken picture */
     ESP_LOGI(TAG_Camera, "Saving picture");
     camera_save_picture(fb);
+    esp_camera_fb_return(fb);
 
     return ESP_OK;
 }
@@ -142,10 +143,6 @@ static esp_err_t camera_save_picture(camera_fb_t *fb)
 
 #ifdef CONFIG_SD_CARD_CONFIG
     char *filename = malloc(32);
-    //sprintf(filename, MOUNTPOINT "/" CONFIG_FILENAME_PICTURE "-%d.bmp", picture_count);
-    //filename[31] = '\0';
-    //sprintf(filename, "/sdcard/PegoutPics_%d", picture_count);
-    //filename[strlen(filename)] = '\0';
     sprintf(filename, "/sdcard/pic_%d", picture_count);
     filename[strlen(filename)] = '\0';
     ESP_LOGI(TAG_Camera, "Filename: %s with length of %d", filename, strlen(filename));
@@ -161,9 +158,10 @@ static esp_err_t camera_save_picture(camera_fb_t *fb)
     //return the frame buffer back to the driver for reuse
     esp_camera_fb_return(fb);
     sdcard_save_buffer_as_file(buf, 1, buf_len, filename);
+    free(buf);
+    buf_len = 0;
 #endif
     sdcard_save_buffer_as_file(fb->buf, 1, fb->len, filename);
-    esp_camera_fb_return(fb);
     picture_count++;
     free(filename);
 #endif
@@ -179,13 +177,12 @@ static esp_err_t camera_save_picture(camera_fb_t *fb)
         return ESP_FAIL;
     }
     /** Free space */
-
+    server_send_picture(buf, buf_len, &sock);
     free(buf);
     buf_len = 0;
 #endif
     // If JPEG picture. No conversion is needed.
     server_send_picture(fb->buf, fb->len, &sock);
-    esp_camera_fb_return(fb);
 #endif
     return ESP_OK;
 }

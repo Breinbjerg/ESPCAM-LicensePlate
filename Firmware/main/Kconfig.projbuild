@@ -95,6 +95,8 @@ menu "Project Settings"
             bool "WROOVER Kit board"
         config OTHER_PINS
             bool "Other pins"
+        config BOARD_M5STACK
+            bool "M5STACK-CAM"
     endchoice
 
     if OTHER_PINS
